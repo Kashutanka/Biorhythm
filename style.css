@@ -1,0 +1,73 @@
+:root {
+    --light-main-color: rgb(240, 236, 243);
+    --main-color: rgb(221, 210, 231);
+    --dark-main-color: rgb(176, 149, 199);
+    --dark-dark-color: rgb(121, 92, 146);
+}
+
+body {
+    background-color: var(--light-main-color);
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.container {
+    background-color: var(--main-color);
+    display: flex;
+    justify-content: center;
+    width: 100%;
+}
+
+.info-block {
+    border-radius: 15px;
+    width: 75%;
+    margin-top: 5%;
+    padding: 10px;
+    background-color: var(--main-color);
+}
+
+.info-block h2 {
+    display: flex;
+    justify-content: center;
+}
+
+.info-block button{
+    width: 100px;
+    margin: 10px;
+}
+
+.name-buttons {
+    margin: 10px;
+    display: flex;
+    justify-content: center;
+}
+
+button {
+    border-radius: 15px;
+    padding: 0.5%;
+    border: none;
+    background-color: var(--dark-main-color);
+    color: white;
+}
+
+button:hover {
+    background-color: var(--dark-dark-color);
+    
+}
+
+.girl-info {
+    background-color: var(--main-color);
+    border-radius: 15px;
+    width: 85%;
+    height: 300px;
+    margin-top: 3%;
+    padding: 10px;
+}
+
+.girl-info h2 {
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+}
