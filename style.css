@@ -54,14 +54,13 @@ button {
 
 button:hover {
     background-color: var(--dark-dark-color);
-    
+    cursor: pointer;   
 }
 
 .girl-info {
     background-color: var(--main-color);
     border-radius: 15px;
     width: 85%;
-    height: 300px;
     margin-top: 3%;
     padding: 10px;
 }
