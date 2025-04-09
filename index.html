@@ -30,14 +30,21 @@
     </div>
     <div class="girl-info">
         <h2>Каштанка</h2>
-       
- <canvas id="kashtanChart" ></canvas>
+        <div class="results">
+            <div id="result"></div>
+            <canvas id="kashtanChart"></canvas>
+        </div>
     </div>
     <script>
-        const birthDate = new Date(2008 - 8 - 17);
+        const birthDate = new Date(2008, 7, 17);
         const today = new Date();
-        const days = Math.floor((today - birthDate) / (1000 * 60 * 60 * 24));
 
+        let dates = [];
+        let physicalData = [];
+        let emotionalData = [];
+        let intellectualData = [];
+
+        // Рассчитываем биоритмы для 5 дней
         for (let offset = -2; offset <= 2; offset++) {
             const targetDate = new Date(today);
             targetDate.setDate(today.getDate() + offset);
@@ -48,22 +55,66 @@
             const emotional = (Math.sin((2 * Math.PI * days) / 28) * 100).toFixed(1);
             const intellectual = (Math.sin((2 * Math.PI * days) / 33) * 100).toFixed(1);
 
-            const dateStr = targetDate.toISOString().split("T")[0];
+            // Добавляем данные
+            dates.push(targetDate.toISOString().split("T")[0]);
+            physicalData.push(physical);
+            emotionalData.push(emotional);
+            intellectualData.push(intellectual);
         }
 
+        // Отображаем данные на странице
+        let resultHtml = "<h3>Биоритмы на 5 дней:</h3><ul>";
+        for (let i = 0; i < dates.length; i++) {
+            resultHtml += `
+          <li><strong>${dates[i]}</strong><br>
+            Физический: ${physicalData[i]}%<br>
+            Эмоциональный: ${emotionalData[i]}%<br>
+            Интеллектуальный: ${intellectualData[i]}%<br>
+          </li>
+        `;
+        }
+        resultHtml += "</ul>";
+        document.getElementById("result").innerHTML = resultHtml;
 
-        let ctx = document.getElementById('kashtanChart').getContext('2d');
-
-        let kashtanChart = new Chart(ctx, {
-            type: 'line',
+        // Создаём график
+        const ctx = document.getElementById("kashtanChart").getContext("2d");
+        const kashtanChart = new Chart(ctx, {
+            type: 'line', // Тип графика (линейный)
             data: {
-                labels: [offset = -2, offset = -1, offset = 0, offset = 1, offset = 2],
-                datasets: [{
-                    label: 'Дни',
-                    data: ['100%', '50%', '0%', '-50%', '-100%'],
-                    borderColor: 'rgb(75, 192, 192)',
-                    tension: '50%'
-                }]
+                labels: dates, // Метки по оси X (даты)
+                datasets: [
+                    {
+                        label: 'Физический',
+                        borderColor: 'orange',
+                        fill: false,
+                        data: physicalData,
+                        borderWidth: 2
+                    },
+                    {
+                        label: 'Эмоциональный',
+                        borderColor: 'green',
+                        fill: false,
+                        data: emotionalData,
+                        borderWidth: 2
+                    },
+                    {
+                        label: 'Интеллектуальный',
+                        borderColor: 'red',
+                        fill: false,
+                        data: intellectualData,
+                        borderWidth: 2
+                    }
+                ]
+            },
+            options: {
+                responsive: true,
+                scales: {
+                    y: {
+                        min: -100,
+                        max: 100,
+                        beginAtZero: true
+                    }
+                }
             }
         });
 
