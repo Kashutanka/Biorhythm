@@ -16,108 +16,115 @@
     <div class="info-block">
         <h2>Выбери котёнка</h2>
         <div class="name-buttons">
-            <button>Диана</button>
-            <button>Ева</button>
-            <button>Каштанка</button>
-            <button>Лера</button>
-            <button>Лима</button>
-            <button>Маша</button>
-            <button>Соня</button>
-            <button>Даша</button>
-            <button>Жания</button>
-            <button>Лерия</button>
+            <button onclick="calculateBiorhythm('2002-07-09', 'Диана')">Диана</button>
+            <button onclick="calculateBiorhythm('2007-03-19', 'Ева')">Ева</button>
+            <button onclick="calculateBiorhythm('2008-08-17', 'Каштанка')">Каштанка</button>
+            <button onclick="calculateBiorhythm('2005-02-28', 'Лера')">Лера</button>
+            <button onclick="calculateBiorhythm('2008-07-30', 'Лима')">Лима</button>
+            <button onclick="calculateBiorhythm('1996-12-19', 'Маша')">Маша</button>
+            <button onclick="calculateBiorhythm('2008-08-27', 'Соня')">Соня</button>
+            <button onclick="calculateBiorhythm('2005-10-24', 'Даша')">Даша</button>
+            <button onclick="calculateBiorhythm('2005-03-12', 'Жания')">Жания</button>
+            <button onclick="calculateBiorhythm('2005-03-08', 'Лерия')">Лерия</button>
         </div>
     </div>
-    <div class="girl-info">
-        <h2>Каштанка</h2>
+    <div class="girl-info" id="infoBlock" style="display: none;">
+        <h2 id="catName"></h2>
         <div class="results">
             <div id="result"></div>
             <canvas id="kashtanChart"></canvas>
         </div>
     </div>
     <script>
-        const birthDate = new Date(2008, 7, 17);
-        const today = new Date();
+        let chartInstance = null;
 
-        let dates = [];
-        let physicalData = [];
-        let emotionalData = [];
-        let intellectualData = [];
+        function calculateBiorhythm(birthStr, name) {
+            // Показываем блок с результатами
+            document.getElementById("infoBlock").style.display = "block";
 
-        // Рассчитываем биоритмы для 5 дней
-        for (let offset = -2; offset <= 2; offset++) {
-            const targetDate = new Date(today);
-            targetDate.setDate(today.getDate() + offset);
+            // Обновляем имя в заголовке
+            document.getElementById("catName").innerText = name;
 
-            const days = Math.floor((targetDate - birthDate) / (1000 * 60 * 60 * 24));
+            const birthDate = new Date(birthStr);
+            const today = new Date();
 
-            const physical = (Math.sin((2 * Math.PI * days) / 23) * 100).toFixed(1);
-            const emotional = (Math.sin((2 * Math.PI * days) / 28) * 100).toFixed(1);
-            const intellectual = (Math.sin((2 * Math.PI * days) / 33) * 100).toFixed(1);
+            let dates = [];
+            let physicalData = [];
+            let emotionalData = [];
+            let intellectualData = [];
 
-            // Добавляем данные
-            dates.push(targetDate.toISOString().split("T")[0]);
-            physicalData.push(physical);
-            emotionalData.push(emotional);
-            intellectualData.push(intellectual);
-        }
+            for (let offset = -2; offset <= 2; offset++) {
+                const targetDate = new Date(today);
+                targetDate.setDate(today.getDate() + offset);
+                const days = Math.floor((targetDate - birthDate) / (1000 * 60 * 60 * 24));
 
-        // Отображаем данные на странице
-        let resultHtml = "<h3>Биоритмы на 5 дней:</h3><ul>";
-        for (let i = 0; i < dates.length; i++) {
-            resultHtml += `
-          <li><strong>${dates[i]}</strong><br>
-            Физический: ${physicalData[i]}%<br>
-            Эмоциональный: ${emotionalData[i]}%<br>
-            Интеллектуальный: ${intellectualData[i]}%<br>
-          </li>
-        `;
-        }
-        resultHtml += "</ul>";
-        document.getElementById("result").innerHTML = resultHtml;
+                const physical = (Math.sin((2 * Math.PI * days) / 23) * 100).toFixed(1);
+                const emotional = (Math.sin((2 * Math.PI * days) / 28) * 100).toFixed(1);
+                const intellectual = (Math.sin((2 * Math.PI * days) / 33) * 100).toFixed(1);
 
-        // Создаём график
-        const ctx = document.getElementById("kashtanChart").getContext("2d");
-        const kashtanChart = new Chart(ctx, {
-            type: 'line', // Тип графика (линейный)
-            data: {
-                labels: dates, // Метки по оси X (даты)
-                datasets: [
-                    {
-                        label: 'Физический',
-                        borderColor: 'orange',
-                        fill: false,
-                        data: physicalData,
-                        borderWidth: 2
-                    },
-                    {
-                        label: 'Эмоциональный',
-                        borderColor: 'green',
-                        fill: false,
-                        data: emotionalData,
-                        borderWidth: 2
-                    },
-                    {
-                        label: 'Интеллектуальный',
-                        borderColor: 'red',
-                        fill: false,
-                        data: intellectualData,
-                        borderWidth: 2
-                    }
-                ]
-            },
-            options: {
-                responsive: true,
-                scales: {
-                    y: {
-                        min: -100,
-                        max: 100,
-                        beginAtZero: true
+                dates.push(targetDate.toISOString().split("T")[0]);
+                physicalData.push(physical);
+                emotionalData.push(emotional);
+                intellectualData.push(intellectual);
+            }
+
+            let resultHtml = "<h3>Биоритмы на 5 дней:</h3><ul>";
+            for (let i = 0; i < dates.length; i++) {
+                resultHtml += `
+      <li><strong>${dates[i]}</strong><br>
+        Физический: ${physicalData[i]}%<br>
+        Эмоциональный: ${emotionalData[i]}%<br>
+        Интеллектуальный: ${intellectualData[i]}%<br>
+      </li>`;
+            }
+            resultHtml += "</ul>";
+            document.getElementById("result").innerHTML = resultHtml;
+
+            const ctx = document.getElementById("kashtanChart").getContext("2d");
+
+            if (chartInstance) {
+                chartInstance.destroy();
+            }
+            
+            chartInstance = new Chart(ctx, {
+                type: 'line',
+                data: {
+                    labels: dates,
+                    datasets: [
+                        {
+                            label: 'Физический',
+                            borderColor: 'orange',
+                            fill: false,
+                            data: physicalData,
+                            borderWidth: 2
+                        },
+                        {
+                            label: 'Эмоциональный',
+                            borderColor: 'green',
+                            fill: false,
+                            data: emotionalData,
+                            borderWidth: 2
+                        },
+                        {
+                            label: 'Интеллектуальный',
+                            borderColor: 'red',
+                            fill: false,
+                            data: intellectualData,
+                            borderWidth: 2
+                        }
+                    ]
+                },
+                options: {
+                    responsive: true,
+                    scales: {
+                        y: {
+                            min: -100,
+                            max: 100
+                        }
                     }
                 }
-            }
-        });
-
+            });
+        }
     </script>
 </body>
 
